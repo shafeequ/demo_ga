@@ -11,6 +11,22 @@ env:
   AWS_S3_BUCKET: my-bucket-name-3s
 
 jobs:
+  checks:
+    name: Formatting checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Setup Node 18
+        uses: actions/setup-node@v2
+        continue-on-error: true
+        with:
+          node-version: '18'
+      - name: Install npm
+        run: |
+          npm ci
+      - name: Checks
+        run: npm run format-check
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -20,11 +36,12 @@ jobs:
             echo "Bucket ${{ env.AWS_S3_BUCKET }} exists"
           else
             echo "Bucket ${{ env.AWS_S3_BUCKET }} does not exist"
-            aws s3api create-bucket --bucket ${{ env.AWS_S3_BUCKET }} --region us-east-1
+            aws s3api create-bucket --bucket ${{ env.AWS_S3_BUCKET }} --region ${{ env.AWS_DEFAULT_REGION }}
           fi
       - name: Configure website hosting
         run: |
-          aws s3 website s3://${{ env.AWS_S3_BUCKET }}/ --index-document index.html --region us-east-1
+          aws s3 website s3://${{ env.AWS_S3_BUCKET }}/ --index-document index.html --region ${{ env.AWS_DEFAULT_REGION }}
+          aws s3 website s3://${{ env.AWS_S3_BUCKET }}/ --redirect-all-requests-to "{\"Protocol\":\"https\",\"HostName\":\"example.com\"}" --index-document index.js --region ${{ env.AWS_DEFAULT_REGION }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Deploy to S3
@@ -32,10 +49,10 @@ jobs:
         with:
           args: --acl public-read --delete
         env:
-          SOURCE_DIR: .
+          SOURCE_DIR: ./src
       - name: Get website URL
         run: |
-          URL=$(aws s3 website s3://${{ env.AWS_S3_BUCKET }}/ --region us-east-1 | grep -oE 'http[s]?://[^"]+')
+          URL=$(aws s3 website http://${{ env.AWS_S3_BUCKET }}.s3.amazonaws.com/ --region ${{ env.AWS_DEFAULT_REGION }} | grep -oE 'http[s]?://[^"]+')
           echo "Website URL: $URL"
 
 

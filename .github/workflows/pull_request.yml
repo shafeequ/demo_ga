@@ -30,6 +30,7 @@ jobs:
         run: npm run format-check
         id: format-check
   deploy:
+    needs: checks
     runs-on: ubuntu-latest
     steps:
       - name: Check if S3 bucket exists

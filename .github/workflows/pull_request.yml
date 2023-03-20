@@ -59,7 +59,8 @@ jobs:
 #          - format-check
 
       - name: Get website URL
-        run: echo "Website URL:  http://${{ env.AWS_S3_BUCKET }}.s3.amazonaws.com/index.html"
+        run: |
+        echo "Website URL:  http://${{ env.AWS_S3_BUCKET }}.s3.amazonaws.com/index.html"
 #          URL=$(aws s3 website http://${{ env.AWS_S3_BUCKET }}.s3.amazonaws.com/ --region ${{ env.AWS_DEFAULT_REGION }} | grep -oE 'http[s]?://[^"]+')
 
 

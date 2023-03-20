@@ -49,6 +49,7 @@ jobs:
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
+          args: --delete --exclude ".git*"
           args: --acl public-read --delete
         env:
           SOURCE_DIR: ./src

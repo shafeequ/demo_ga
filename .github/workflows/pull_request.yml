@@ -53,10 +53,10 @@ jobs:
           args: --acl public-read --delete
         env:
           SOURCE_DIR: ./src
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        needs:
-          - install
-          - format-check
+#        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+#        needs:
+#          - install
+#          - format-check
 
       - name: Get website URL
         run: |

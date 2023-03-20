@@ -22,6 +22,9 @@ jobs:
             echo "Bucket ${{ env.AWS_S3_BUCKET }} does not exist"
             aws s3api create-bucket --bucket ${{ env.AWS_S3_BUCKET }} --region us-east-1
           fi
+      - name: Configure website hosting
+        run: |
+          aws s3 website s3://${{ env.AWS_S3_BUCKET }}/ --index-document index.html --region us-east-1
       - name: Checkout
         uses: actions/checkout@v2
       - name: Deploy to S3

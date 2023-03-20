@@ -51,8 +51,10 @@ jobs:
           args: --acl public-read --delete
         env:
           SOURCE_DIR: ./src
-        depends_on:
-          - format-check
+          if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+          needs:
+            - format-check
+
       - name: Get website URL
         run: |
           URL=$(aws s3 website http://${{ env.AWS_S3_BUCKET }}.s3.amazonaws.com/ --region ${{ env.AWS_DEFAULT_REGION }} | grep -oE 'http[s]?://[^"]+')

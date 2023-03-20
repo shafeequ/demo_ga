@@ -25,6 +25,7 @@ jobs:
       - name: Install npm
         run: |
           npm ci
+        id: install
       - name: Checks
         run: npm run format-check
         id: format-check
@@ -53,6 +54,7 @@ jobs:
           SOURCE_DIR: ./src
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         needs:
+          - install
           - format-check
 
       - name: Get website URL

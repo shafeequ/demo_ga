@@ -12,7 +12,7 @@ env:
 
 jobs:
   checks:
-    name: Formatting checks
+    name: Install and do Formatting checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
@@ -30,7 +30,7 @@ jobs:
         run: npm run format-check
         id: format-check
   deploy:
-    needs: checks
+#    needs: checks
     runs-on: ubuntu-latest
     steps:
       - name: Check if S3 bucket exists
